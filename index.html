@@ -560,6 +560,184 @@
     ::-webkit-scrollbar-track { background: var(--bg); }
     ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
 
+    /* ── Splash screen ── */
+    .splash {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 24px;
+      transition: opacity .6s ease, transform .6s ease;
+    }
+
+    .splash.hidden {
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(1.04);
+    }
+
+    .splash-logo {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      animation: splashPop .6s cubic-bezier(.34,1.56,.64,1) both;
+    }
+
+    .splash-icon {
+      width: 72px;
+      height: 72px;
+      background: var(--accent);
+      border-radius: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 36px;
+      box-shadow: 0 0 60px rgba(79,255,176,.35);
+    }
+
+    .splash-name {
+      font-family: "Syne", sans-serif;
+      font-size: 38px;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -1px;
+    }
+
+    .splash-name span { color: var(--accent); }
+
+    .splash-sub {
+      font-size: 13px;
+      color: var(--text-muted);
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      animation: splashFade .8s .3s ease both;
+    }
+
+    .splash-bar-wrap {
+      width: 200px;
+      animation: splashFade .8s .5s ease both;
+    }
+
+    .splash-bar {
+      height: 3px;
+      background: var(--surface2);
+      border-radius: 99px;
+      overflow: hidden;
+    }
+
+    .splash-bar-fill {
+      height: 100%;
+      background: var(--accent);
+      border-radius: 99px;
+      animation: splashLoad 1.4s .4s cubic-bezier(.4,0,.2,1) forwards;
+      width: 0;
+      box-shadow: 0 0 12px var(--accent);
+    }
+
+    @keyframes splashPop {
+      from { opacity: 0; transform: scale(.8) translateY(20px); }
+      to   { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    @keyframes splashFade {
+      from { opacity: 0; transform: translateY(10px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @keyframes splashLoad {
+      to { width: 100%; }
+    }
+
+    /* ── Calendario de actividad ── */
+    .cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 4px;
+    }
+
+    .cal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 10px;
+    }
+
+    .cal-month-label {
+      font-family: "Syne", sans-serif;
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .cal-legend {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 11px;
+      color: var(--text-muted);
+    }
+
+    .cal-legend-item {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .cal-legend-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 3px;
+    }
+
+    .cal-day-name {
+      font-size: 10px;
+      color: var(--text-dim);
+      text-align: center;
+      padding-bottom: 6px;
+      font-weight: 600;
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+
+    .cal-day {
+      aspect-ratio: 1;
+      border-radius: 6px;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      color: var(--text-dim);
+      cursor: default;
+      transition: all .15s;
+      position: relative;
+    }
+
+    .cal-day:hover   { border-color: var(--text-muted); color: var(--text); }
+    .cal-day.empty   { background: transparent; border-color: transparent; }
+    .cal-day.today   { border-color: var(--accent); color: var(--accent); font-weight: 700; }
+
+    .cal-day.has-exp  { background: rgba(255,107,107,.18); border-color: rgba(255,107,107,.4); color: var(--exp); }
+    .cal-day.has-inc  { background: rgba(79,255,176,.18);  border-color: rgba(79,255,176,.4);  color: var(--inc); }
+    .cal-day.has-both { background: rgba(255,209,102,.15); border-color: rgba(255,209,102,.4); color: var(--bud); }
+
+    .cal-dot {
+      position: absolute;
+      bottom: 3px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 4px;
+      height: 4px;
+      border-radius: 50%;
+      background: currentColor;
+      opacity: .7;
+    }
+
     /* ── Botón menú móvil ── */
     .tsb {
       display: none;
@@ -597,6 +775,20 @@
   </style>
 </head>
 <body>
+
+<!-- Splash screen -->
+<div class="splash" id="splash">
+  <div class="splash-logo">
+    <div class="splash-name">Money<span>Control</span></div>
+  </div>
+  <div class="splash-sub">Gestión Financiera Personal</div>
+  <div class="splash-bar-wrap">
+    <div class="splash-bar">
+      <div class="splash-bar-fill"></div>
+    </div>
+  </div>
+</div>
+
 
 <button class="tsb" onclick="document.getElementById('sb').classList.toggle('open')">☰</button>
 
@@ -671,6 +863,11 @@
         <div id="lm"></div>
       </div>
     </div>
+      <div style="margin-top:20px" class="card">
+        <div class="ct">Actividad del Mes</div>
+        <div id="activity-cal"></div>
+      </div>
+
 
     <!-- Gastos -->
     <div class="view" id="view-gastos">
@@ -1000,6 +1197,7 @@
     sd(); cm(); pms();
     if (_mt === 'expense') ret(); else rit();
     rd();
+    renderCalendar();
   }
 
   // ── Eliminar registro ──
@@ -1010,6 +1208,7 @@
     sd(); pms();
     if (type === 'expense') ret(); else rit();
     rd();
+    renderCalendar();
   }
 
   // ── Gestión de instancias Chart.js ──
@@ -1468,8 +1667,85 @@
     </table>`;
   }
 
+
+  // ── Splash screen ──
+  function showSplash() {
+    setTimeout(() => {
+      const splash = document.getElementById('splash');
+      splash.classList.add('hidden');
+      setTimeout(() => { splash.style.display = 'none'; }, 600);
+    }, 2000);
+  }
+
+  // ── Calendario de actividad ──
+  function renderCalendar() {
+    const container = document.getElementById('activity-cal');
+    if (!container) return;
+
+    const now     = new Date();
+    const year    = now.getFullYear();
+    const month   = now.getMonth();
+    const today   = now.getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const firstDay   = new Date(year, month, 1).getDay(); // 0=Sun
+
+    // Build a set of days with activity
+    const cur = cm2();
+    const expDays = new Set(D.expenses.filter(e => gms(e.date) === cur).map(e => parseInt(e.date.split('-')[2])));
+    const incDays = new Set(D.incomes.filter(i => gms(i.date) === cur).map(i => parseInt(i.date.split('-')[2])));
+
+    const monthNames = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+    const dayNames   = ['Dom','Lun','Mar','Mié','Jue','Vie','Sáb'];
+
+    let html = `
+      <div class="cal-header">
+        <div class="cal-month-label">${monthNames[month]} ${year}</div>
+        <div class="cal-legend">
+          <div class="cal-legend-item">
+            <div class="cal-legend-dot" style="background:rgba(79,255,176,.6)"></div>Ingreso
+          </div>
+          <div class="cal-legend-item">
+            <div class="cal-legend-dot" style="background:rgba(255,107,107,.6)"></div>Gasto
+          </div>
+          <div class="cal-legend-item">
+            <div class="cal-legend-dot" style="background:rgba(255,209,102,.6)"></div>Ambos
+          </div>
+        </div>
+      </div>
+      <div class="cal-grid">`;
+
+    // Day name headers
+    dayNames.forEach(d => { html += `<div class="cal-day-name">${d}</div>`; });
+
+    // Empty cells before first day
+    for (let i = 0; i < firstDay; i++) {
+      html += `<div class="cal-day empty"></div>`;
+    }
+
+    // Day cells
+    for (let d = 1; d <= daysInMonth; d++) {
+      const hasExp = expDays.has(d);
+      const hasInc = incDays.has(d);
+      const isToday = d === today;
+
+      let cls = 'cal-day';
+      if (isToday) cls += ' today';
+      if (hasExp && hasInc) cls += ' has-both';
+      else if (hasExp)      cls += ' has-exp';
+      else if (hasInc)      cls += ' has-inc';
+
+      const dot = (hasExp || hasInc) ? '<div class="cal-dot"></div>' : '';
+      html += `<div class="${cls}">${d}${dot}</div>`;
+    }
+
+    html += `</div>`;
+    container.innerHTML = html;
+  }
+
   // ── Inicialización ──
+  showSplash();
   ld(); pms(); rd();
+  renderCalendar();
 </script>
 </body>
 </html>
